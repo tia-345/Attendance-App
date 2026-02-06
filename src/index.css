@@ -1,0 +1,269 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  --bg-main: #e6ecd9;
+  --card-bg: #f4f6ef;
+  --section-bg: #ffffff;
+
+  --accent-primary: #8faf9a;
+  --accent-secondary: #6f8f7a;
+
+  --text-main: #2f3e34;
+  --text-muted: #6b7c70;
+
+  --border: #d6ded1;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(
+    180deg,
+    #e6ecd9 0%,
+    #dde6cf 100%
+  );
+  color: var(--text-main);
+}
+
+/* LAYOUT */
+.app-container {
+  padding: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+/* OUTER CARD */
+.card {
+  width: 100%;
+  max-width: 1100px;
+  background: var(--card-bg);
+  border-radius: 26px;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(47, 62, 52, 0.12);
+}
+
+/* TITLE */
+h1 {
+  margin-bottom: 24px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* GRID */
+.dashboard {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* SECTIONS */
+.section {
+  background: var(--section-bg);
+  border-radius: 22px;
+  padding: 22px;
+  border: 1px solid var(--border);
+}
+
+/* SECTION TITLES */
+.section-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+  margin-bottom: 18px;
+}
+
+/* INPUTS */
+label {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+input {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: #f9faf7;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(143, 175, 154, 0.25);
+}
+
+/* BUTTONS */
+button {
+  width: 100%;
+  padding: 13px;
+  border-radius: 16px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.primary {
+  background: linear-gradient(
+    135deg,
+    var(--accent-primary),
+    var(--accent-secondary)
+  );
+  color: white;
+}
+
+.secondary {
+  background: #eef2e6;
+  color: var(--text-main);
+}
+
+/* METRICS */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.metric {
+  background: #f8faf5;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid var(--border);
+}
+
+.metric-title {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.metric-value {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* STATUS CHIP */
+.status {
+  margin-top: 14px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.safe {
+  background: #dfeee3;
+  color: #3f6b4f;
+}
+
+.risk {
+  background: #fff3cd;
+  color: #8a6a1e;
+}
+
+.danger {
+  background: #f8d7da;
+  color: #842029;
+}
+
+/* INFO */
+.info {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* WARNING */
+.warning {
+  color: #842029;
+}
+
+/* CIRCULAR CHART */
+.circle-container {
+  display: flex;
+  justify-content: center;
+  margin: 22px 0;
+}
+
+.circle-chart {
+  width: 140px;
+  height: 140px;
+  position: relative;
+}
+
+.circle-chart svg {
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #e1e7db;
+  stroke-width: 12;
+}
+
+.circle-progress {
+  fill: none;
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-dasharray: 339;
+  stroke-dashoffset: 339;
+  animation: fillCircle 1.2s ease forwards;
+  stroke: var(--accent-secondary);
+}
+
+.circle-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-text span {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.circle-text small {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* EXPLANATION */
+.explanation {
+  margin-top: 14px;
+  padding: 14px;
+  background: #f8faf5;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ANIMATION */
+@keyframes fillCircle {
+  to {
+    stroke-dashoffset: var(--offset);
+  }
+}
