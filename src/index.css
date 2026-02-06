@@ -14,9 +14,15 @@
   --border: #d6ded1;
 }
 
+/* ---------- GLOBAL ---------- */
 * {
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
+  transition: background-color 0.25s ease,
+              color 0.25s ease,
+              box-shadow 0.25s ease,
+              transform 0.25s ease,
+              border-color 0.25s ease;
 }
 
 body {
@@ -29,14 +35,14 @@ body {
   color: var(--text-main);
 }
 
-/* LAYOUT */
+/* ---------- LAYOUT ---------- */
 .app-container {
   padding: 32px;
   display: flex;
   justify-content: center;
 }
 
-/* OUTER CARD */
+/* ---------- OUTER CARD ---------- */
 .card {
   width: 100%;
   max-width: 1100px;
@@ -46,7 +52,12 @@ body {
   box-shadow: 0 20px 40px rgba(47, 62, 52, 0.12);
 }
 
-/* TITLE */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 60px rgba(47, 62, 52, 0.18);
+}
+
+/* ---------- TITLE ---------- */
 h1 {
   margin-bottom: 24px;
   font-size: 26px;
@@ -54,7 +65,7 @@ h1 {
   color: var(--text-main);
 }
 
-/* GRID */
+/* ---------- GRID ---------- */
 .dashboard {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
@@ -67,7 +78,7 @@ h1 {
   }
 }
 
-/* SECTIONS */
+/* ---------- SECTIONS ---------- */
 .section {
   background: var(--section-bg);
   border-radius: 22px;
@@ -75,7 +86,11 @@ h1 {
   border: 1px solid var(--border);
 }
 
-/* SECTION TITLES */
+.section:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- SECTION TITLES ---------- */
 .section-title {
   font-size: 12px;
   font-weight: 700;
@@ -85,7 +100,7 @@ h1 {
   margin-bottom: 18px;
 }
 
-/* INPUTS */
+/* ---------- INPUTS ---------- */
 label {
   font-size: 13px;
   color: var(--text-muted);
@@ -108,9 +123,10 @@ input:focus {
   outline: none;
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px rgba(143, 175, 154, 0.25);
+  transform: scale(1.015);
 }
 
-/* BUTTONS */
+/* ---------- BUTTONS ---------- */
 button {
   width: 100%;
   padding: 13px;
@@ -120,6 +136,16 @@ button {
   font-weight: 600;
   cursor: pointer;
   margin-top: 10px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .primary {
@@ -136,7 +162,7 @@ button {
   color: var(--text-main);
 }
 
-/* METRICS */
+/* ---------- METRICS ---------- */
 .metrics {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -150,6 +176,11 @@ button {
   border: 1px solid var(--border);
 }
 
+.metric:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(47, 62, 52, 0.12);
+}
+
 .metric-title {
   font-size: 12px;
   color: var(--text-muted);
@@ -161,7 +192,7 @@ button {
   margin-top: 4px;
 }
 
-/* STATUS CHIP */
+/* ---------- STATUS ---------- */
 .status {
   margin-top: 14px;
   padding: 6px 14px;
@@ -169,6 +200,7 @@ button {
   font-size: 12px;
   font-weight: 600;
   display: inline-block;
+  animation: statusPulse 2.5s ease-in-out infinite;
 }
 
 .safe {
@@ -186,19 +218,24 @@ button {
   color: #842029;
 }
 
-/* INFO */
+@keyframes statusPulse {
+  0% { opacity: 0.9; }
+  50% { opacity: 1; }
+  100% { opacity: 0.9; }
+}
+
+/* ---------- INFO & WARN ---------- */
 .info {
   font-size: 14px;
   color: var(--text-muted);
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
-/* WARNING */
 .warning {
   color: #842029;
 }
 
-/* CIRCULAR CHART */
+/* ---------- CIRCULAR CHART ---------- */
 .circle-container {
   display: flex;
   justify-content: center;
@@ -209,6 +246,7 @@ button {
   width: 140px;
   height: 140px;
   position: relative;
+  animation: fadeInUp 0.6s ease;
 }
 
 .circle-chart svg {
@@ -250,7 +288,24 @@ button {
   color: var(--text-muted);
 }
 
-/* EXPLANATION */
+@keyframes fillCircle {
+  to {
+    stroke-dashoffset: var(--offset);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- EXPLANATION ---------- */
 .explanation {
   margin-top: 14px;
   padding: 14px;
@@ -259,11 +314,4 @@ button {
   border: 1px solid var(--border);
   font-size: 13px;
   color: var(--text-muted);
-}
-
-/* ANIMATION */
-@keyframes fillCircle {
-  to {
-    stroke-dashoffset: var(--offset);
-  }
 }
