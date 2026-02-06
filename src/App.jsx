@@ -40,6 +40,7 @@ function App() {
   const [finalAttendance, setFinalAttendance] = useState(null);
   const [bestCaseAttendance, setBestCaseAttendance] = useState(null);
   const [worstCaseAttendance, setWorstCaseAttendance] = useState(null);
+  const [minRequired, setMinRequired] = useState(null);
 
   const [status, setStatus] = useState("");
   const [message, setMessage] = useState("");
@@ -52,6 +53,7 @@ function App() {
     setFinalAttendance(null);
     setBestCaseAttendance(null);
     setWorstCaseAttendance(null);
+    setMinRequired(null);
     setStatus("");
     setMessage("");
 
@@ -59,10 +61,9 @@ function App() {
       attended === "" ||
       conducted === "" ||
       remaining === "" ||
-      target === "" ||
-      planned === ""
+      target === ""
     ) {
-      setError("Please fill all fields, including planned attendance.");
+      setError("Please fill all required fields.");
       return;
     }
 
@@ -70,43 +71,49 @@ function App() {
     const c = Number(conducted);
     const r = Number(remaining);
     const t = Number(target);
-    const p = Number(planned);
+    const p = planned === "" ? null : Number(planned);
 
-    if (a > c || p > r || c === 0) {
+    if (a > c || c === 0 || (p !== null && p > r)) {
       setError("Invalid attendance values.");
       return;
     }
 
-    /* CURRENT (informational) */
+    /* CURRENT ATTENDANCE (informational) */
     const current = (a / c) * 100;
     setCurrentAttendance(current.toFixed(2));
 
-    /* FINAL — WHAT IF BASED */
-    const final = ((a + p) / (c + r)) * 100;
-    setFinalAttendance(final.toFixed(2));
-
-    /* STATUS BASED ON FINAL */
-    if (final >= t + 5) setStatus("SAFE");
-    else if (final >= t) setStatus("RISK");
-    else setStatus("DANGER");
-
-    /* MESSAGE */
-    if (final >= t) {
-      setMessage(
-        `With your plan to attend ${p} more classes, you will meet the target.`
-      );
-    } else {
-      setMessage(
-        `With this plan, you will fall short of the target. Increase planned attendance.`
-      );
-    }
-
-    /* BOUNDS */
+    /* BEST & WORST CASE */
     const best = ((a + r) / (c + r)) * 100;
     const worst = (a / (c + r)) * 100;
-
     setBestCaseAttendance(best.toFixed(2));
     setWorstCaseAttendance(worst.toFixed(2));
+
+    /* MINIMUM REQUIRED CLASSES */
+    let required = null;
+    for (let i = 0; i <= r; i++) {
+      const pct = ((a + i) / (c + r)) * 100;
+      if (pct >= t) {
+        required = i;
+        break;
+      }
+    }
+    setMinRequired(required);
+
+    /* WHAT-IF (OPTIONAL) */
+    if (p !== null) {
+      const final = ((a + p) / (c + r)) * 100;
+      setFinalAttendance(final.toFixed(2));
+
+      if (final >= t + 5) setStatus("SAFE");
+      else if (final >= t) setStatus("RISK");
+      else setStatus("DANGER");
+
+      setMessage(
+        final >= t
+          ? `With your plan to attend ${p} more classes, you will meet the target.`
+          : `With this plan, you will not meet the target. Increase planned attendance.`
+      );
+    }
   };
 
   const resetAll = () => {
@@ -119,6 +126,7 @@ function App() {
     setFinalAttendance(null);
     setBestCaseAttendance(null);
     setWorstCaseAttendance(null);
+    setMinRequired(null);
     setStatus("");
     setMessage("");
     setError("");
@@ -131,7 +139,7 @@ function App() {
         <h1>Attendance Planner</h1>
 
         <div className="dashboard">
-          {/* INPUT */}
+          {/* INPUTS */}
           <div className="section">
             <div className="section-title">Inputs</div>
 
@@ -191,26 +199,17 @@ function App() {
             {error && <p className="warning">{error}</p>}
           </div>
 
-          {/* RESULTS */}
+          {/* OUTCOME */}
           <div className="section">
             <div className="section-title">Outcome</div>
 
-            {finalAttendance && (
+            {currentAttendance && (
               <>
-                <CircularChart value={finalAttendance} />
-
                 <div className="metrics">
                   <div className="metric">
                     <div className="metric-title">Current</div>
                     <div className="metric-value">
                       {currentAttendance}%
-                    </div>
-                  </div>
-
-                  <div className="metric">
-                    <div className="metric-title">Final (What-If)</div>
-                    <div className="metric-value">
-                      {finalAttendance}%
                     </div>
                   </div>
 
@@ -229,11 +228,27 @@ function App() {
                   </div>
                 </div>
 
-                <div className={`status ${status.toLowerCase()}`}>
-                  Status: {status}
-                </div>
+                {minRequired !== null ? (
+                  <p className="info">
+                    You need to attend at least{" "}
+                    <strong>{minRequired}</strong> more classes to reach{" "}
+                    <strong>{target}%</strong> attendance.
+                  </p>
+                ) : (
+                  <p className="info warning">
+                    Even attending all future classes will not reach the target.
+                  </p>
+                )}
 
-                <p className="info">{message}</p>
+                {finalAttendance && (
+                  <>
+                    <CircularChart value={finalAttendance} />
+                    <div className={`status ${status.toLowerCase()}`}>
+                      Status: {status}
+                    </div>
+                    <p className="info">{message}</p>
+                  </>
+                )}
               </>
             )}
 
@@ -247,10 +262,13 @@ function App() {
             {showExplanation && (
               <div className="explanation">
                 <p>
-                  Final Attendance =
-                  (Attended + Planned) / (Conducted + Remaining) × 100
+                  Minimum required classes are calculated independently of
+                  what-if planning.
                 </p>
-                <p>Status is determined from the final attendance.</p>
+                <p>
+                  Final attendance is calculated only when a what-if plan is
+                  provided.
+                </p>
               </div>
             )}
           </div>
